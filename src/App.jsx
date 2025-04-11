@@ -1,15 +1,13 @@
-
-import './App.css'
-import SubmissionForm from './components/SubmissionForm'
+import "./App.css";
+import SubmissionForm from "./components/SubmissionForm";
 
 function App() {
-
   return (
     <>
       <h1>Submission Form Project</h1>
-<SubmissionForm/>
+      <SubmissionForm />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
