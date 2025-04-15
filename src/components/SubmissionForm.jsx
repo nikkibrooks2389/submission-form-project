@@ -1,70 +1,53 @@
-import { useState, useEffect } from "react";
+import useForm from "../hooks/useForm"
 import InputField from "./InputField/InputField";
 import Button from "./Button/Button";
 
 const SubmissionForm = () => {
-  const [formData, setFormData] = useState({
+  const initialValues = {
     name: "",
     email: "",
     message: "",
-  });
-
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState("");
-
-  const handleFormData = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setSubmissionStatus("");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const validationErrors = handleValidation();
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) {
-      setSubmissionStatus("There were errors in your submission.");
-      return;
-    }
-
-    setIsLoading(true);
-    setSubmissionStatus(""); // Clear previous status
-
-    // Simulate async submission
-    setTimeout(() => {
-      setIsLoading(false);
-      setSubmissionStatus("Form submitted successfully.");
-      // Optional: clear form
-      setFormData({ name: "", email: "", message: "" });
-    }, 1500);
-  };
-
-  useEffect(() => {
-    console.log("formData change", formData);
-  }, [formData]);
-
-  const handleValidation = () => {
+  const validate = (values) => {
     const errors = {};
 
-    if (!formData.name.trim()) {
+    if (!values.name.trim()) {
       errors.name = "Name is required";
     }
 
-    if (!formData.message.trim()) {
+    if (!values.message.trim()) {
       errors.message = "Message is required";
     }
 
-    if (!formData.email.trim()) {
+    if (!values.email.trim()) {
       errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
       errors.email = "Email is invalid";
     }
 
     return errors;
   };
+
+  const onSubmit = (formData, { reset, done }) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log("Submitted:", formData);
+        done("Form submitted successfully.");
+        reset();
+        resolve();
+      }, 1500);
+    });
+  };
+
+  const {
+    formData,
+    errors,
+    isLoading,
+    status,
+    handleChange,
+    handleSubmit,
+  } = useForm(initialValues, validate, onSubmit);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -74,7 +57,7 @@ const SubmissionForm = () => {
         id="name"
         name="name"
         value={formData.name}
-        onChange={handleFormData}
+        onChange={handleChange}
         placeholder="Name"
         errorMessage={errors.name}
       />
@@ -84,7 +67,7 @@ const SubmissionForm = () => {
         type="email"
         name="email"
         value={formData.email}
-        onChange={handleFormData}
+        onChange={handleChange}
         placeholder="Email"
         errorMessage={errors.email}
       />
@@ -94,7 +77,7 @@ const SubmissionForm = () => {
         type="textarea"
         name="message"
         value={formData.message}
-        onChange={handleFormData}
+        onChange={handleChange}
         placeholder="Message"
         errorMessage={errors.message}
       />
@@ -112,9 +95,13 @@ const SubmissionForm = () => {
       <div
         role="status"
         aria-live="polite"
-        style={{ marginTop: "1rem", fontWeight: "bold", color: submissionStatus.includes("error") ? "red" : "green" }}
+        style={{
+          marginTop: "1rem",
+          fontWeight: "bold",
+          color: status.includes("error") ? "red" : "green",
+        }}
       >
-        {submissionStatus}
+        {status}
       </div>
     </form>
   );
