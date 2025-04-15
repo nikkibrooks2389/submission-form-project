@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import InputField from "./InputField/InputField";
+import Button from "./Button/Button";
 
 const SubmissionForm = () => {
   const [formData, setFormData] = useState({
@@ -9,17 +10,36 @@ const SubmissionForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState("");
 
   const handleFormData = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setSubmissionStatus("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const validationErrors = handleValidation();
     setErrors(validationErrors);
-    console.log(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setSubmissionStatus("There were errors in your submission.");
+      return;
+    }
+
+    setIsLoading(true);
+    setSubmissionStatus(""); // Clear previous status
+
+    // Simulate async submission
+    setTimeout(() => {
+      setIsLoading(false);
+      setSubmissionStatus("Form submitted successfully.");
+      // Optional: clear form
+      setFormData({ name: "", email: "", message: "" });
+    }, 1500);
   };
 
   useEffect(() => {
@@ -30,7 +50,7 @@ const SubmissionForm = () => {
     const errors = {};
 
     if (!formData.name.trim()) {
-      errors.name = "name is required";
+      errors.name = "Name is required";
     }
 
     if (!formData.message.trim()) {
@@ -78,7 +98,24 @@ const SubmissionForm = () => {
         placeholder="Message"
         errorMessage={errors.message}
       />
-      <button type="submit">Submit</button>
+
+      <Button
+        type="submit"
+        variant="primary"
+        ariaLabel="Submit form"
+        isLoading={isLoading}
+        disabled={isLoading}
+      >
+        Submit
+      </Button>
+
+      <div
+        role="status"
+        aria-live="polite"
+        style={{ marginTop: "1rem", fontWeight: "bold", color: submissionStatus.includes("error") ? "red" : "green" }}
+      >
+        {submissionStatus}
+      </div>
     </form>
   );
 };
