@@ -1,0 +1,35 @@
+.input-wrapper {
+    margin-bottom: 1rem;
+  }
+  
+  .input-label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  
+  .input-element {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .input-error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  /* NEW: Add this for hiding label accessibly */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }

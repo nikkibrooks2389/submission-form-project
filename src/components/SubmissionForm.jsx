@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import InputField from "./InputField/InputField";
 
 const SubmissionForm = () => {
   const [formData, setFormData] = useState({
@@ -7,7 +8,7 @@ const SubmissionForm = () => {
     message: "",
   });
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
 
   const handleFormData = (e) => {
     const { name, value } = e.target;
@@ -16,8 +17,8 @@ const SubmissionForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = handleValidation()
-    setErrors(validationErrors)
+    const validationErrors = handleValidation();
+    setErrors(validationErrors);
     console.log(formData);
   };
 
@@ -42,34 +43,41 @@ const SubmissionForm = () => {
       errors.email = "Email is invalid";
     }
 
-    return errors
+    return errors;
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        onChange={handleFormData}
-        placeholder="Name"
+      <InputField
+        label="Name"
+        hideLabel={true}
+        id="name"
         name="name"
         value={formData.name}
-      />
-{errors.name && <p style={{color:"red"}}>{errors.name}</p>}
-      <input
-        type="email"
         onChange={handleFormData}
-        placeholder="Email"
+        placeholder="Name"
+        errorMessage={errors.name}
+      />
+
+      <InputField
+        label="Email"
+        type="email"
         name="email"
         value={formData.email}
-      />
-      {errors.email && <p style={{color:"red"}}>{errors.email}</p>}
-      <textarea
         onChange={handleFormData}
-        placeholder="Message"
+        placeholder="Email"
+        errorMessage={errors.email}
+      />
+
+      <InputField
+        label="Message"
+        type="textarea"
         name="message"
         value={formData.message}
+        onChange={handleFormData}
+        placeholder="Message"
+        errorMessage={errors.message}
       />
-      {errors.message && <p style={{color:"red"}}>{errors.message}</p>}
       <button type="submit">Submit</button>
     </form>
   );
