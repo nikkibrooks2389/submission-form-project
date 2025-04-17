@@ -1,4 +1,3 @@
-// hooks/useForm.js
 import { useState } from "react";
 
 const useForm = (initialValues, validateFn, onSubmitFn) => {
@@ -7,10 +6,22 @@ const useForm = (initialValues, validateFn, onSubmitFn) => {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState("");
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Update the input value
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setStatus(""); // clear success when typing again
+    setStatus(""); // Clear success message on any change
+
+    // Real-time validation for that single field
+    const updatedField = { ...formData, [name]: value };
+    const updatedErrors = validateFn(updatedField);
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: updatedErrors[name] || "",
+    }));
   };
 
   const handleSubmit = async (e) => {

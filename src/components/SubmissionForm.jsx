@@ -1,32 +1,14 @@
 import useForm from "../hooks/useForm"
 import InputField from "./InputField/InputField";
 import Button from "./Button/Button";
+import validateContactForm from "../utils/validation/schemas/validateContactForm";
+
 
 const SubmissionForm = () => {
   const initialValues = {
     name: "",
     email: "",
     message: "",
-  };
-
-  const validate = (values) => {
-    const errors = {};
-
-    if (!values.name.trim()) {
-      errors.name = "Name is required";
-    }
-
-    if (!values.message.trim()) {
-      errors.message = "Message is required";
-    }
-
-    if (!values.email.trim()) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = "Email is invalid";
-    }
-
-    return errors;
   };
 
   const onSubmit = (formData, { reset, done }) => {
@@ -47,10 +29,10 @@ const SubmissionForm = () => {
     status,
     handleChange,
     handleSubmit,
-  } = useForm(initialValues, validate, onSubmit);
+  } = useForm(initialValues, validateContactForm, onSubmit);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <InputField
         label="Name"
         hideLabel={true}
