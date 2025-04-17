@@ -1,8 +1,9 @@
-import useForm from "../hooks/useForm"
+import useForm from "../hooks/useForm";
 import InputField from "./InputField/InputField";
 import Button from "./Button/Button";
 import validateContactForm from "../utils/validation/schemas/validateContactForm";
 
+import { useRef } from "react";
 
 const SubmissionForm = () => {
   const initialValues = {
@@ -11,6 +12,9 @@ const SubmissionForm = () => {
     message: "",
   };
 
+  const nameRef = useRef();
+  const emailRef = useRef();
+  const messageRef = useRef();
   const onSubmit = (formData, { reset, done }) => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -29,7 +33,11 @@ const SubmissionForm = () => {
     status,
     handleChange,
     handleSubmit,
-  } = useForm(initialValues, validateContactForm, onSubmit);
+  } = useForm(initialValues, validateContactForm, onSubmit, {
+    name: nameRef,
+    email: emailRef,
+    message: messageRef,
+  });
 
   return (
     <form onSubmit={handleSubmit} noValidate>
@@ -42,6 +50,7 @@ const SubmissionForm = () => {
         onChange={handleChange}
         placeholder="Name"
         errorMessage={errors.name}
+        ref={nameRef}
       />
 
       <InputField
@@ -52,9 +61,11 @@ const SubmissionForm = () => {
         onChange={handleChange}
         placeholder="Email"
         errorMessage={errors.email}
+        ref={emailRef}
       />
 
       <InputField
+        ref={messageRef}
         label="Message"
         type="textarea"
         name="message"

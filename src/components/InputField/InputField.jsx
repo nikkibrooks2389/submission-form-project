@@ -1,6 +1,7 @@
+import React from "react";
 import "./InputField.css";
 
-const InputField = ({
+const InputField = React.forwardRef(({
   label,
   id,
   name,
@@ -12,7 +13,7 @@ const InputField = ({
   className = "",
   hideLabel = false,
   ...rest
-}) => {
+}, ref) => {
   const inputId = id || name;
   const describedBy = errorMessage ? `${inputId}-error` : undefined;
 
@@ -29,6 +30,7 @@ const InputField = ({
 
       {type === "textarea" ? (
         <textarea
+          ref={ref}
           id={inputId}
           name={name}
           value={value}
@@ -41,6 +43,7 @@ const InputField = ({
         />
       ) : (
         <input
+          ref={ref}
           id={inputId}
           name={name}
           type={type}
@@ -61,6 +64,6 @@ const InputField = ({
       )}
     </div>
   );
-};
+});
 
 export default InputField;

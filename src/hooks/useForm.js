@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useForm = (initialValues, validateFn, onSubmitFn) => {
+const useForm = (initialValues, validateFn, onSubmitFn, refsMap = {}) => {
   const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -26,23 +26,28 @@ const useForm = (initialValues, validateFn, onSubmitFn) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const validationErrors = validateFn(formData);
     setErrors(validationErrors);
-
+  
     if (Object.keys(validationErrors).length > 0) {
       setStatus("There were errors in your submission.");
+  
+      // 👇 Auto-focus the first field with an error
+      const firstErrorField = Object.keys(validationErrors)[0];
+      refsMap[firstErrorField]?.current?.focus();
+  
       return;
     }
-
+  
     setIsLoading(true);
     setStatus("");
-
+  
     await onSubmitFn(formData, {
       reset: () => setFormData(initialValues),
       done: (message) => setStatus(message || "Form submitted successfully."),
     });
-
+  
     setIsLoading(false);
   };
 
