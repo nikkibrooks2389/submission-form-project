@@ -36,6 +36,7 @@ const InputField = ({
           placeholder={placeholder}
           aria-describedby={describedBy}
           className="input-element"
+          aria-invalid={!!errorMessage}
           {...rest}
         />
       ) : (
@@ -48,6 +49,7 @@ const InputField = ({
           placeholder={placeholder}
           aria-describedby={describedBy}
           className="input-element"
+          aria-invalid={!!errorMessage}
           {...rest}
         />
       )}
